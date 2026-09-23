@@ -39,7 +39,8 @@ the binary from a host terminal afterwards, not from inside the container.
 ## Restore token
 
 First run pops the portal's monitor picker. It saves a `restore_token` to
-`.pipsqueak-restore-token` (gitignored) so later runs skip the picker.
+`$XDG_STATE_HOME/pipsqueak/restore_token` (or `~/.local/state/pipsqueak/`)
+so later runs skip the picker.
 
 ## License
 

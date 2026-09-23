@@ -28,12 +28,17 @@ use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
 use winit::event::{ElementState, KeyEvent, MouseButton, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop, EventLoopProxy};
-use winit::keyboard::{Key, NamedKey};
+use winit::keyboard::{Key, ModifiersState, NamedKey};
 use winit::platform::wayland::WindowAttributesExtWayland;
 use winit::platform::x11::{WindowAttributesExtX11, WindowType};
 use winit::window::{Window, WindowId};
 
 use capture::CapturedFrame;
+
+/// Matches the Flatpak app id / .desktop file basename, so desktop shells
+/// correctly associate this window with its launcher entry, icon and
+/// taskbar grouping.
+const APP_ID: &str = "io.github.teacher_svb.pipsqueak";
 
 /// Wakes the event loop when the capture thread has a new frame ready.
 #[derive(Debug)]
@@ -76,6 +81,11 @@ struct App {
     capture_handle: Option<thread::JoinHandle<()>>,
     proxy: EventLoopProxy<UserEvent>,
     preset_index: usize,
+    /// Current keyboard modifier state, so `+`/`-`/`Tab` only fire on a
+    /// plain keypress. Without this, e.g. Alt+Tab to switch windows away
+    /// from this one can deliver a bare `Tab` keydown first, which we'd
+    /// otherwise misread as our own switch-monitor shortcut.
+    modifiers: ModifiersState,
 }
 
 impl App {
@@ -89,6 +99,7 @@ impl App {
             capture_handle: None,
             proxy,
             preset_index: DEFAULT_PRESET,
+            modifiers: ModifiersState::empty(),
         }
     }
 
@@ -194,7 +205,7 @@ impl ApplicationHandler<UserEvent> for App {
             .with_max_inner_size(size)
             .with_x11_window_type(vec![WindowType::Utility]);
         // `with_name` exists on both the Wayland and X11 ext traits; disambiguate.
-        let attrs = WindowAttributesExtWayland::with_name(attrs, "pipsqueak", "pipsqueak");
+        let attrs = WindowAttributesExtWayland::with_name(attrs, APP_ID, APP_ID);
 
         let window = Rc::new(
             event_loop
@@ -239,6 +250,11 @@ impl ApplicationHandler<UserEvent> for App {
             }
             WindowEvent::Resized(_) => self.redraw(),
             WindowEvent::RedrawRequested => self.redraw(),
+            WindowEvent::ModifiersChanged(mods) => self.modifiers = mods.state(),
+            // Only a *plain* keypress is one of our shortcuts - otherwise
+            // e.g. Alt+Tab to switch windows away from this one delivers a
+            // bare Tab keydown first, which would otherwise misfire as our
+            // own switch-monitor shortcut.
             WindowEvent::KeyboardInput {
                 event:
                     KeyEvent {
@@ -247,7 +263,7 @@ impl ApplicationHandler<UserEvent> for App {
                         ..
                     },
                 ..
-            } => match logical_key.as_ref() {
+            } if self.modifiers.is_empty() => match logical_key.as_ref() {
                 // The logical (produced-character) key, not the physical
                 // one - so this is "+"/"-" wherever the layout puts them,
                 // not wherever US QWERTY does.

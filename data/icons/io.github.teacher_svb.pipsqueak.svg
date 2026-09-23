@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Placeholder icon: rounded-square badge + a monitor with an inset PiP
+       window, in the corner it'd actually appear on screen. Swap for
+       something less programmer-art before shipping for real. -->
+  <rect width="128" height="128" rx="28" fill="#2b3a55"/>
+  <rect x="20" y="30" width="88" height="58" rx="8" fill="#eef2f8"/>
+  <rect x="28" y="38" width="72" height="42" rx="4" fill="#2b3a55"/>
+  <rect x="66" y="58" width="34" height="22" rx="4" fill="#eef2f8" stroke="#2b3a55" stroke-width="2"/>
+  <rect x="52" y="96" width="24" height="6" rx="3" fill="#eef2f8"/>
+</svg>

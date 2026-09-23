@@ -46,9 +46,14 @@ use winit::event_loop::EventLoopProxy;
 
 use crate::UserEvent;
 
-/// Persisted across runs (in the project dir) so the portal's monitor
-/// picker doesn't pop up every single time during development.
-const RESTORE_TOKEN_PATH: &str = ".pipsqueak-restore-token";
+/// Where the restore token is persisted across runs (`~/.local/state/pipsqueak/`
+/// or `$XDG_STATE_HOME/pipsqueak/`, and the equivalent per-app path Flatpak
+/// redirects `$HOME` to when sandboxed) so the portal's monitor picker
+/// doesn't pop up every single run.
+fn restore_token_path() -> Option<std::path::PathBuf> {
+    let dirs = directories::ProjectDirs::from("", "", "pipsqueak")?;
+    Some(dirs.state_dir()?.join("restore_token"))
+}
 
 pub struct CapturedFrame {
     pub width: u32,
@@ -61,7 +66,9 @@ pub struct CapturedFrame {
 /// Deletes the saved restore token so the next capture forces a fresh
 /// portal picker instead of silently reusing the last monitor.
 pub fn forget_restore_token() {
-    let _ = fs::remove_file(RESTORE_TOKEN_PATH);
+    if let Some(path) = restore_token_path() {
+        let _ = fs::remove_file(path);
+    }
 }
 
 /// Spawns a background thread that does the portal handshake, then runs the
@@ -114,14 +121,25 @@ pub fn spawn(
 }
 
 fn read_restore_token() -> Option<String> {
-    fs::read_to_string(RESTORE_TOKEN_PATH)
+    let path = restore_token_path()?;
+    fs::read_to_string(path)
         .ok()
         .map(|s| s.trim().to_owned())
         .filter(|s| !s.is_empty())
 }
 
 fn save_restore_token(token: &str) {
-    if let Err(err) = fs::write(RESTORE_TOKEN_PATH, token) {
+    let Some(path) = restore_token_path() else {
+        eprintln!("capture: no state directory available, can't save restore token");
+        return;
+    };
+    if let Some(parent) = path.parent() {
+        if let Err(err) = fs::create_dir_all(parent) {
+            eprintln!("capture: failed to create state directory: {err}");
+            return;
+        }
+    }
+    if let Err(err) = fs::write(path, token) {
         eprintln!("capture: failed to save restore token: {err}");
     }
 }

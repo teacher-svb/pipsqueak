@@ -1,2 +1,9 @@
 /target
-/.pipsqueak-restore-token
+
+# Local flatpak-builder artifacts - not part of the source, and the
+# local-test manifest exists only for iterating before a tag/commit exists
+# to point the real manifest's git source at.
+/.flatpak-builder
+/build-dir
+/flatpak-repo
+/io.github.teacher_svb.pipsqueak.local-test.yml

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Pipsqueak
+Comment=Mirror a monitor in a small floating picture-in-picture window
+Exec=pipsqueak
+Icon=io.github.teacher_svb.pipsqueak
+Categories=AudioVideo;
+Terminal=false
