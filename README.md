@@ -1,4 +1,4 @@
-# pipsqueak
+<img src="data/pipsqueak-logo.svg" alt="pipsqueak" width="360">
 
 Borderless picture-in-picture window mirroring a monitor, on Linux/Wayland.
 
