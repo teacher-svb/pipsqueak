@@ -29,6 +29,10 @@
       <image>https://raw.githubusercontent.com/teacher-svb/pipsqueak/master/data/screenshots/main.png</image>
       <caption>The picture-in-picture window mirroring a monitor</caption>
     </screenshot>
+    <screenshot>
+      <video codec="vp9" container="webm" width="2551" height="1390">https://raw.githubusercontent.com/teacher-svb/pipsqueak/master/data/screenshots/main.webm</video>
+      <caption>Resizing and moving the picture-in-picture window</caption>
+    </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/teacher-svb/pipsqueak</url>
   <url type="bugtracker">https://github.com/teacher-svb/pipsqueak/issues</url>
