@@ -11,9 +11,11 @@
   <description>
     <p>
       Pipsqueak shows a live picture-in-picture mirror of one of your
-      monitors in a small, borderless, always-floating window - handy for
-      keeping an eye on a second screen without dedicating a whole monitor
-      or workspace to it.
+      monitors in a small, borderless, always-floating window. Handy when
+      presenting on a projector with the main screen set to extend rather
+      than duplicate: you get the extra screen space, but no longer see
+      what the audience sees - short of running something like OBS
+      windowless just to preview a source.
     </p>
     <p>
       Uses the ScreenCast portal, so it works the same under any Wayland

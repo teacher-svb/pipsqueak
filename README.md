@@ -1,9 +1,14 @@
 <img src="data/pipsqueak-logo.svg" alt="pipsqueak" width="360">
 
 A tiny, borderless picture-in-picture window that mirrors one of your
-monitors live, for Linux/Wayland. Drag it anywhere, keep it floating
-above everything else, and glance at a second screen without dedicating
-a whole monitor (or workspace) to it.
+monitors live, for Linux/Wayland.
+
+Made for presenting on a beamer/projector with your main screen set to
+*extend* rather than *duplicate*: you get the extra screen space, but
+lose sight of what the audience is actually seeing. The usual fix -
+running OBS windowless just to preview a source - felt like a lot of
+machinery for "show me screen 2 in a small window." Pipsqueak is just
+that: drag it anywhere, keep it floating above everything else.
 
 - **Borderless & floating** - no titlebar, stays floating even on tiling
   window managers
